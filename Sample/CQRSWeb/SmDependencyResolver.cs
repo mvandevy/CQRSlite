@@ -7,7 +7,7 @@ using StructureMap;
 
 namespace CQRSWeb
 {
-    public class SmDependencyResolver : IDependencyResolver, IServiceLocator {
+    public class SmDependencyResolver : /*IDependencyResolver, */IServiceLocator {
 
         private readonly IContainer _container;
 

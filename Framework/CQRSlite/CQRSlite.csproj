@@ -44,11 +44,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bus\HandlerRegistrar.cs" />
     <Compile Include="Cache\CacheRepository.cs" />
     <Compile Include="Config\IServiceLocator.cs" />
     <Compile Include="Domain\Exception\AggregateOrEventMissingIdException.cs" />
@@ -66,6 +70,10 @@
     <Compile Include="Bus\IHandlerRegistrar.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
     <Compile Include="Events\IEventHandler.cs" />
+    <Compile Include="Messages\IMessageRouter.cs" />
+    <Compile Include="Messages\IMessageRouteRegistrar.cs" />
+    <Compile Include="Messages\MessageRouter.cs" />
+    <Compile Include="Messages\MessageRouterRegistrar.cs" />
     <Compile Include="Snapshots\ISnapshotStore.cs" />
     <Compile Include="Domain\Factories\AggregateFactory.cs" />
     <Compile Include="Snapshots\Snapshot.cs" />
@@ -81,7 +89,6 @@
     <Compile Include="Infrastructure\PrivateReflectionDynamicObjectExtensions.cs" />
     <Compile Include="Snapshots\DefaultSnapshotStrategy.cs" />
     <Compile Include="Messages\IMessage.cs" />
-    <Compile Include="Config\BusRegistrar.cs" />
     <Compile Include="Snapshots\SnapshotRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +108,8 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

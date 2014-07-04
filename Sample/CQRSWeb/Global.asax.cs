@@ -1,11 +1,14 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
+using Autofac.Integration.Mvc;
 using CQRSCode.ReadModel;
 using CQRSCode.WriteModel.Handlers;
 using CQRSlite;
 using CQRSlite.Bus;
 using CQRSlite.Config;
 using CQRSlite.Messages;
+using CQRSWeb.Controllers;
 
 namespace CQRSWeb
 {	
@@ -31,11 +34,18 @@ namespace CQRSWeb
 
         protected void Application_Start()
         {
-			AreaRegistration.RegisterAllAreas();
+            var builder = new ContainerBuilder();
+            builder.RegisterType<AutofacServiceLocator>().As<IServiceLocator>();
+            builder.RegisterType<HomeController>().InstancePerHttpRequest();
+            var container = builder.Build();
+
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            
+            AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            RegisterHandlers((IServiceLocator)DependencyResolver.Current);
+            RegisterHandlers((IServiceLocator) (DependencyResolver.Current.GetService(typeof(IServiceLocator))));
         }
 
         private void RegisterHandlers(IServiceLocator serviceLocator)

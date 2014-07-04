@@ -1,37 +1,42 @@
 using System;
 using CQRSlite.Bus;
+using CQRSlite.Messages;
 using CQRSlite.Tests.Substitutes;
 using NUnit.Framework;
 
 namespace CQRSlite.Tests.Bus
 {
-	[TestFixture]
+    [TestFixture]
     public class When_sending_command
     {
         private InProcessBus _bus;
+        private HandlerRegistrar _registrar;
+        private MessageRouter _router;
 
-		[SetUp]
+        [SetUp]
         public void Setup()
         {
-            _bus = new InProcessBus();
+            _registrar = new HandlerRegistrar();
+            _router = new MessageRouter(_registrar);
+            _bus = new InProcessBus(_router);
         }
 
         [Test]
         public void Should_run_handler()
         {
             var handler = new TestAggregateDoSomethingHandler();
-            _bus.RegisterHandler<TestAggregateDoSomething>(handler.Handle);
+            _registrar.RegisterHandler<TestAggregateDoSomething>(handler.Handle);
             _bus.Send(new TestAggregateDoSomething());
 
-            Assert.AreEqual(1,handler.TimesRun);
+            Assert.AreEqual(1, handler.TimesRun);
         }
 
         [Test]
         public void Should_throw_if_more_handlers()
         {
             var x = new TestAggregateDoSomethingHandler();
-            _bus.RegisterHandler<TestAggregateDoSomething>(x.Handle);
-            _bus.RegisterHandler<TestAggregateDoSomething>(x.Handle);
+            _registrar.RegisterHandler<TestAggregateDoSomething>(x.Handle);
+            _registrar.RegisterHandler<TestAggregateDoSomething>(x.Handle);
 
             Assert.Throws<InvalidOperationException>(() => _bus.Send(new TestAggregateDoSomething()));
         }

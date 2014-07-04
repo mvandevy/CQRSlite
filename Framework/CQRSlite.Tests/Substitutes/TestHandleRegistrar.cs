@@ -11,7 +11,13 @@ namespace CQRSlite.Tests.Substitutes
 
         public void RegisterHandler<T>(Action<T> handler) where T : IMessage
         {
-            HandlerList.Add(new TestHandlerListItem {Type = typeof(T),Handler = handler});
+            HandlerList.Add(new TestHandlerListItem { Type = typeof(T), Handler = handler });
+        }
+
+        public bool TryGetRoute(Type type, out IList<Action<IMessage>> handlers)
+        {
+            handlers = null;
+            return true;
         }
     }
 

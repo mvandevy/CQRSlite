@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CQRSlite.Commands;
 using CQRSlite.Events;
-using CQRSlite.Infrastructure;
 using CQRSlite.Messages;
 
 namespace CQRSlite.Bus
 {
-    public class InProcessBus : ICommandSender, IEventPublisher, IHandlerRegistrar
+    public class InProcessBus : ICommandSender, IEventPublisher
     {
-        private readonly Dictionary<Type, List<Action<IMessage>>> _routes = new Dictionary<Type, List<Action<IMessage>>>();
+        private readonly IMessageRouter _router;
 
-        public void RegisterHandler<T>(Action<T> handler) where T : IMessage
+        public InProcessBus(IMessageRouter router)
         {
-            List<Action<IMessage>> handlers;
-            if(!_routes.TryGetValue(typeof(T), out handlers))
-            {
-                handlers = new List<Action<IMessage>>();
-                _routes.Add(typeof(T), handlers);
-            }
-            handlers.Add(DelegateAdjuster.CastArgument<IMessage, T>(x => handler(x)));
+            _router = router;
         }
 
         public void Send<T>(T command) where T : ICommand
         {
-            List<Action<IMessage>> handlers; 
-            if (_routes.TryGetValue(typeof(T), out handlers))
+            IList<Action<IMessage>> handlers;
+            if (_router.TryGetRouteHandlers(command, out handlers))
             {
                 if (handlers.Count != 1) throw new InvalidOperationException("Cannot send to more than one handler");
-                handlers[0](command);
+                handlers.First()(command);
             }
             else
             {
@@ -38,11 +32,13 @@ namespace CQRSlite.Bus
 
         public void Publish<T>(T @event) where T : IEvent
         {
-            List<Action<IMessage>> handlers; 
-            if (!_routes.TryGetValue(@event.GetType(), out handlers)) return;
-            foreach(var handler in handlers)
+            IList<Action<IMessage>> handlers; 
+            if (!_router.TryGetRouteHandlers(@event, out handlers)) return;
+            foreach (var handler in handlers)
+            {
                 handler(@event);
-            
+            }
+                
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CQRSlite.Tests.Substitutes
 
         public object GetService(Type type)
         {
-            if(type == typeof(IHandlerRegistrar))
+            if (type == typeof(IHandlerRegistrar))
                 return new TestHandleRegistrar();
             if (type == typeof(TestAggregateDidSomethingHandler))
             {
