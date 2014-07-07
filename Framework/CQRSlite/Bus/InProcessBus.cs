@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using CQRSlite.Commands;
 using CQRSlite.Events;
@@ -18,15 +19,29 @@ namespace CQRSlite.Bus
 
         public void Send<T>(T command) where T : ICommand
         {
-            IList<Action<IMessage>> handlers;
-            if (_router.TryGetRouteHandlers(command, out handlers))
+            var attributes = TypeDescriptor.GetAttributes(command).OfType<OnMessageSendAttribute>();
+            if (attributes.Any())
             {
-                if (handlers.Count != 1) throw new InvalidOperationException("Cannot send to more than one handler");
-                handlers.First()(command);
-            }
-            else
-            {
-                throw new InvalidOperationException("No handler registered");
+                var interProcAttribute = attributes.FirstOrDefault(x => x.Channels.Contains(SendChannel.InterProc));
+                if (interProcAttribute != null)
+                {
+                    // send via masstransit
+                }
+
+                var inProcAttribute = attributes.FirstOrDefault(x => x.Channels.Contains(SendChannel.InProc));
+                if (inProcAttribute != null)
+                {
+                    IList<Action<IMessage>> handlers;
+                    if (_router.TryGetRouteHandlers(command, out handlers))
+                    {
+                        if (handlers.Count != 1) throw new InvalidOperationException("Cannot send to more than one handler");
+                        handlers.First()(command);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("No handler registered");
+                    }
+                }
             }
         }
 

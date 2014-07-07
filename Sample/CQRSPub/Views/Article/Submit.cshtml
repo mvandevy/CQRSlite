@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Add new article";
+}
+
+<h2>Add new article</h2>
+@using (Html.BeginForm())
+{
+    <p>
+        Title: @Html.TextBox("Title")<br/>
+        Body: @Html.TextBox("Body")<br/>
+        <button name="Submit">Submit</button>    
+        <a href="/">Back</a>
+    </p>
+}

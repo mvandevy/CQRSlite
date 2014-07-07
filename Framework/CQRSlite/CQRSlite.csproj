@@ -74,6 +74,7 @@
     <Compile Include="Messages\IMessageRouteRegistrar.cs" />
     <Compile Include="Messages\MessageRouter.cs" />
     <Compile Include="Messages\MessageRouterRegistrar.cs" />
+    <Compile Include="Messages\OnSendAttribute.cs" />
     <Compile Include="Snapshots\ISnapshotStore.cs" />
     <Compile Include="Domain\Factories\AggregateFactory.cs" />
     <Compile Include="Snapshots\Snapshot.cs" />

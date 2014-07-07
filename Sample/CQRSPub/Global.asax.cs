@@ -20,6 +20,7 @@ namespace CQRSPub
             var builder = new ContainerBuilder();
             builder.RegisterModule(new RegistrationModule());
             builder.RegisterType<HomeController>().InstancePerHttpRequest();
+            builder.RegisterType<ArticleController>().InstancePerHttpRequest();
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

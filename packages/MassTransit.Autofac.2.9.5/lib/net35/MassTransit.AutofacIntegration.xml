@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MassTransit.AutofacIntegration</name>
+    </assembly>
+    <members>
+        <member name="M:MassTransit.AutofacExtensions.LoadFrom(MassTransit.SubscriptionConfigurators.SubscriptionBusServiceConfigurator,Autofac.ILifetimeScope,System.String)">
+            <summary>
+            Load the consumer configuration from the specified Autofac LifetimeScope
+            </summary>
+            <param name="configurator"></param>
+            <param name="scope">The LifetimeScope of the container</param>
+            <param name="name">The name to use for the scope created for each message</param>
+        </member>
+        <member name="M:MassTransit.AutofacExtensions.Consumer``1(MassTransit.SubscriptionConfigurators.SubscriptionBusServiceConfigurator,Autofac.ILifetimeScope,System.String)">
+            <summary>
+            Registers a consumer given the lifetime scope specified
+            </summary>
+            <typeparam name="TConsumer">The consumer type</typeparam>
+            <param name="configurator">The service bus configurator</param>
+            <param name="scope">The LifetimeScope of the container</param>
+            <param name="name">The name of the scope created per-message</param>
+            <returns></returns>
+        </member>
+        <member name="M:MassTransit.AutofacExtensions.Saga``1(MassTransit.SubscriptionConfigurators.SubscriptionBusServiceConfigurator,Autofac.ILifetimeScope,System.String)">
+            <summary>
+            Registers a saga using the container that has the repository resolved from the container
+            </summary>
+            <typeparam name="TSaga"></typeparam>
+            <param name="configurator"></param>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
